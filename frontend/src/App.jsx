@@ -6,7 +6,7 @@ import useAuth from './hooks/useAuth';
 import useProducts from './hooks/useProduct';
 
 function App() {
-  const { authMode, isAuthenticated, authForm, user, authSubmitting, authError, handleAuthChange, handleAuthSubmit, getAuthHeaders, handleToggleAuthMode } = useAuth()
+  const { authMode, isAuthenticated, authForm, user, authSubmitting, authError, handleAuthChange, handleAuthSubmit, getAuthHeaders, handleToggleAuthMode, handleLogout } = useAuth()
   const { products, loading, form, editingId, submitting, productError, handleDelete, handleProductChange, loadProducts, handleProductSubmit, startEdit, resetForm } = useProducts({ isAuthenticated, getAuthHeaders })
 
 return (
@@ -18,7 +18,10 @@ return (
 
       <div className='auth-summary'>
         {user ? (
-          <p>Hello, {user.name}!</p>
+         <>
+           <p>Hello, {user.name}!</p>
+          <button type='button' onClick={handleLogout}>Log Out</button>
+         </>
         ) : (
           <p>Please log in to manage products.</p>
         )}
