@@ -1,66 +1,68 @@
-function AuthCard({
-  authMode,
-  authForm,
-  authSubmitting,
-  error,
-  onChange,
-  onSubmit,
-  onToggleMode,
+function ProductCardTable({
+  loading,
+  products,
+  onEdit,
+  onDelete,
+  onRefresh,
+  canManage,
 }) {
   return (
-    <form className="form-card" onSubmit={onSubmit}>
-      <h2>{authMode === "login" ? "Login Admin" : "Register Admin"}</h2>
-
-      {authMode === "register" && (
-        <label>
-          Nama
-          <input
-            name="name"
-            value={authForm.name}
-            onChange={onChange}
-            required
-            placeholder="Nama Lengkap"
-          />
-        </label>
-      )}
-
-      <label>
-        Email
-        <input
-          name="email"
-          type="email"
-          value={authForm.email}
-          onChange={onChange}
-          required
-          placeholder="admin@mail.com"
-        />
-      </label>
-
-       <label>
-        Password
-        <input
-          name="password"
-          type="password"
-          value={authForm.password}
-          onChange={onChange}
-          required
-          minLength={8}
-          placeholder="Minimal 8 Karakter"
-        />
-      </label>
-
-      <div className="actions">
-        <button type="submit" disabled={authSubmitting}>
-            {authSubmitting ? 'Proses...' : authMode === "login" ? "login" : "register"}
-        </button>
-        <button type="button" className="ghost" onClick={onToggleMode}>
-            {authMode === 'login' ? "Pindah Ke Register" : "Pindah Ke Login"}
+    <section className="table-card wide-card">
+      <div className="table-head">
+        <h2>Daftar Produk</h2>
+        <button type="button" className="ghost" onClick={onRefresh}>
+          refresh
         </button>
       </div>
 
-      {error && <p className="error-msg">{error}</p>}
-    </form>
+      {loading ? (
+        <p>Memuat Data....</p>
+      ) : products.length === 0 ? (
+        <p>Belum ada produk yang terdaftar.</p>
+      ) : (
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Harga</th>
+                <th>Stok</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product.id}>
+                  <td>
+                    <strong>{product.name}</strong>
+                    <span>{product.description || "-"}</span>
+                  </td>
+                  <td>Rp {Number(product.price).toLocaleString("id-ID")}</td>
+                  <td>{product.stock}</td>
+                  <td className="row-actions">
+                    <button
+                      type="button"
+                      className="ghost"
+                      onClick={() => onEdit(product)}
+                      disabled={!canManage}
+                    >
+                      edit
+                    </button>
+                    <button
+                      type="button"
+                      className="danger"
+                      onClick={() => onDelete(product.id)}
+                      disabled={!canManage}
+                    >
+                      hapus
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
   );
 }
-
-export default AuthCard;
