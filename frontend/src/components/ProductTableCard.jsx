@@ -66,3 +66,5 @@ function ProductCardTable({
     </section>
   );
 }
+
+export default ProductCardTable;
